@@ -45,14 +45,14 @@ jobs:
              echo "WARNING: No google-services.json found for ${{ matrix.environment }}. Push Notifications won't work."
           fi
 
-      - name: Generate Assets
-        run: |
-          npx capacitor-assets generate --android
-
       - name: Initialize Capacitor Android
         run: |
           npx cap add android || true
           npx cap sync android
+
+      - name: Generate Assets
+        run: |
+          npx capacitor-assets generate --android
           
       - name: Build APK (${{ matrix.environment }})
         run: |
