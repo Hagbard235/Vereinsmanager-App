@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "814784370296",
+    "project_id": "vereinsverwaltung-app-prod",
+    "storage_bucket": "vereinsverwaltung-app-prod.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:814784370296:android:49712f3d4bb54a235c3f8d",
+        "android_client_info": {
+          "package_name": "de.svbolzum.vereinsmanager"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBgaoBo1uctX3xRohdYeQEcX_4GF2llXIk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

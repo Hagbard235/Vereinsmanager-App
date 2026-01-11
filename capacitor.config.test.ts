@@ -1,7 +1,7 @@
 import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-    appId: 'de.svbolzum.vereinsmanager.test',
+    appId: 'de.svbolzum.vereinsmanager.testing',
     appName: 'Vereinsm. (Test)',
     webDir: 'www',
     server: {
