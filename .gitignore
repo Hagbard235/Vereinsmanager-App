@@ -1,6 +1,6 @@
 node_modules/
 dist/
-android/
+# android/
 !android/build.gradle
 !android/app/build.gradle
 !android/settings.gradle
