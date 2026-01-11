@@ -1,0 +1,54 @@
+name: Build Android APK
+
+on:
+  push:
+    branches:
+      - main
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          
+      - name: Install Dependencies
+        run: npm install
+        
+      # Generate Assets (Icons and Splash)
+      - name: Generate Assets
+        run: |
+          npx capacitor-assets generate --android
+
+      # Ensure Android platform is added in CI environment
+      # We intentionally don't commit the 'android' folder to keep the repo clean,
+      # or users can commit it if they want. Here we assume we generate it on the fly or it exists.
+      # If the user committed 'android/', this step might warn but is safe.
+      - name: Initialize Capacitor Android
+        run: |
+          npx cap add android || true
+          npx cap sync android
+          
+      - name: Build APK
+        run: |
+          cd android
+          chmod +x gradlew
+          ./gradlew assembleDebug
+          
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: Vereinsmanager-Debug
+          path: android/app/build/outputs/apk/debug/app-debug.apk

@@ -1,0 +1,16 @@
+node_modules/
+dist/
+android/
+!android/build.gradle
+!android/app/build.gradle
+!android/settings.gradle
+!android/gradle.properties
+# Actually, for Capacitor, often people commit the android folder if they make native changes.
+# But for a pure wrapper, we can generate it. 
+# HOWEVER, to be safe and let the user have a "full" project, we will NOT ignore android folder by default 
+# so they can commit the generated scaffold.
+# Let's just ignore the build artifacts.
+android/app/build/
+android/.gradle/
+android/local.properties
+.DS_Store
