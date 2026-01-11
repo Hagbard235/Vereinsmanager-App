@@ -1,4 +1,4 @@
-name: Build Android APK
+name: Build Android Apps (Multi-Env)
 
 on:
   push:
@@ -9,6 +9,10 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        environment: [prod, test]
+        
     steps:
       - uses: actions/checkout@v4
       
@@ -27,28 +31,41 @@ jobs:
       - name: Install Dependencies
         run: npm install
         
-      # Generate Assets (Icons and Splash)
+      - name: Configure Environment (${{ matrix.environment }})
+        run: |
+          # Copy correct capacitor config
+          cp capacitor.config.${{ matrix.environment }}.ts capacitor.config.ts
+          
+          # Check if google-services.json exists for this env, otherwise warn (or fail if strict)
+          if [ -f "config/${{ matrix.environment }}/google-services.json" ]; then
+             echo "Found google-services.json for ${{ matrix.environment }}"
+             mkdir -p android/app
+             cp config/${{ matrix.environment }}/google-services.json android/app/google-services.json
+          else
+             echo "WARNING: No google-services.json found for ${{ matrix.environment }}. Push Notifications won't work."
+          fi
+
       - name: Generate Assets
         run: |
           npx capacitor-assets generate --android
 
-      # Ensure Android platform is added in CI environment
-      # We intentionally don't commit the 'android' folder to keep the repo clean,
-      # or users can commit it if they want. Here we assume we generate it on the fly or it exists.
-      # If the user committed 'android/', this step might warn but is safe.
       - name: Initialize Capacitor Android
         run: |
           npx cap add android || true
           npx cap sync android
           
-      - name: Build APK
+      - name: Build APK (${{ matrix.environment }})
         run: |
           cd android
           chmod +x gradlew
           ./gradlew assembleDebug
           
+      - name: Rename APK
+        run: |
+          mv android/app/build/outputs/apk/debug/app-debug.apk Vereinsmanager-${{ matrix.environment }}.apk
+
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: Vereinsmanager-Debug
-          path: android/app/build/outputs/apk/debug/app-debug.apk
+          name: App-${{ matrix.environment }}
+          path: Vereinsmanager-${{ matrix.environment }}.apk

@@ -1,176 +1,35 @@
 <!DOCTYPE html>
 <html lang="de">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
-    <title>Vereinsmanager Launcher</title>
+    <title>Vereinsmanager</title>
     <style>
-        :root {
-            --primary: #0056b3;
-            --secondary: #6c757d;
-            --bg: #f8f9fa;
-        }
-
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            margin: 0;
             display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
             height: 100vh;
-            background-color: var(--bg);
-            padding: 20px;
-            box-sizing: border-box;
-            -webkit-user-select: none;
-            user-select: none;
+            margin: 0;
+            background-color: #f8f9fa;
         }
-
-        .container {
-            width: 100%;
-            max-width: 400px;
-            text-align: center;
-        }
-
         .logo {
             width: 120px;
             height: 120px;
-            margin-bottom: 40px;
             border-radius: 20px;
-            background-color: white;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            padding: 10px;
-        }
-
-        h1 {
-            font-size: 24px;
-            margin-bottom: 10px;
-            color: #333;
-        }
-
-        p {
-            color: #666;
-            margin-bottom: 40px;
-        }
-
-        .btn {
-            display: block;
-            width: 100%;
-            padding: 16px;
-            margin-bottom: 16px;
-            border: none;
-            border-radius: 12px;
-            font-size: 18px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: transform 0.1s, opacity 0.2s;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            text-decoration: none;
-            color: white;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .btn:active {
-            transform: scale(0.98);
-        }
-
-        .btn-prod {
-            background: linear-gradient(135deg, #0056b3, #004494);
-        }
-
-        .btn-test {
-            background: linear-gradient(135deg, #28a745, #218838);
-        }
-
-        .footer {
-            margin-top: 40px;
-            font-size: 12px;
-            color: #aaa;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
     </style>
 </head>
-
 <body>
-    <div class="container" id="mainContainer">
-        <img src="assets/logo.png" alt="Logo" class="logo" id="secretBtn">
-
-        <h1 id="statusText">Lade Vereinsmanager...</h1>
-
-        <!-- Verstecktes Menü -->
-        <div id="devMenu" style="display: none; margin-top: 20px;">
-            <p>🔧 Entwickler-Modus</p>
-            <button class="btn btn-prod" onclick="openEnv('prod')">
-                🚀 Produktion starten
-            </button>
-
-            <button class="btn btn-test" onclick="openEnv('test')">
-                🧪 Testumgebung
-            </button>
-        </div>
-
-        <div class="footer">v1.0.0 Wrapper</div>
-    </div>
-
+    <img src="assets/logo.png" alt="Logo" class="logo">
     <script>
-        const URLS = {
-            prod: 'https://vereinsmanager-pro---prod.web.app/',
-            test: 'https://vereinsmanager-cb966.web.app/'
-        };
-
-        const SECRET_TAPS_REQUIRED = 5;
-        let taps = 0;
-        let redirectTimeout;
-
-        // PLUGIN-ERKENNUNG: Prüfe ob Capacitor App Plugin geladen ist
-        // Da wir im Web-Context laufen, müssen wir es importieren oder global nutzen
-        // Capacitor bindet Plugins automatisch ein.
-
-        // EVENT LISTENER: Prüfe auf "Shortcut Launch"
-        // WICHTIG: Das Event feuert sehr früh.
-        if (window.Capacitor && Capacitor.Plugins && Capacitor.Plugins.App) {
-            Capacitor.Plugins.App.addListener('appUrlOpen', data => {
-                if (data.url && data.url.includes('vereinsmanager://test')) {
-                    console.log('Shortcut detected: TEST MODE');
-                    // Stoppe normalen Redirect
-                    clearTimeout(redirectTimeout);
-                    openEnv('test');
-                }
-            });
-        }
-
-        function startQuickRedirect() {
-            // 300ms warten (genug Zeit für Event Listener oder Secret Tap)
-            // Wenn nichts passiert -> Prod
-            redirectTimeout = setTimeout(() => {
-                openEnv('prod');
-            }, 300);
-        }
-
-        document.getElementById('secretBtn').addEventListener('click', () => {
-            taps++;
-            if (taps >= SECRET_TAPS_REQUIRED) {
-                clearTimeout(redirectTimeout);
-                showDevMenu();
-            }
-        });
-
-        function showDevMenu() {
-            document.getElementById('statusText').innerText = "Umgebung wählen:";
-            document.getElementById('devMenu').style.display = 'block';
-            try { navigator.vibrate(200); } catch (e) { }
-        }
-
-        function openEnv(env) {
-            // Setze Flag zurück oder speichere es?
-            // Hier navigieren wir einfach hart
-            window.location.href = URLS[env];
-        }
-
-        // Starte sofort
-        startQuickRedirect();
+        // Die URL wird automatisch von Capacitor (server.url) geladen.
+        // Falls das fehlschlägt (z.B. Offline), bleiben wir hier stehen.
+        // Wir können einen Reload-Button anbieten falls Offline.
+        
+        // Capacitor leitet standardmäßig sofort weiter, wenn server.url gesetzt ist.
+        // Diese Datei wird nur kurz angezeigt (Splash) oder wenn Seite nicht erreichbar.
     </script>
 </body>
-
 </html>
