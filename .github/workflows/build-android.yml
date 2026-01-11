@@ -36,16 +36,22 @@ jobs:
           # Copy correct capacitor config
           cp capacitor.config.${{ matrix.environment }}.ts capacitor.config.ts
           
-          # Check if google-services.json exists for this env, otherwise warn (or fail if strict)
+          # Check if google-services.json exists for this env
           if [ -f "config/${{ matrix.environment }}/google-services.json" ]; then
              echo "Found google-services.json for ${{ matrix.environment }}"
              mkdir -p android/app
              cp config/${{ matrix.environment }}/google-services.json android/app/google-services.json
           else
-             echo "WARNING: No google-services.json found for ${{ matrix.environment }}. Push Notifications won't work."
+             echo "WARNING: No google-services.json found for ${{ matrix.environment }}."
           fi
 
-      - name: Initialize Capacitor Android
+          # Switch Icon for Test
+          if [ "${{ matrix.environment }}" == "test" ] && [ -f "assets/logo-test.png" ]; then
+             echo "Using TEST Icon"
+             cp assets/logo-test.png assets/logo.png
+          fi
+
+      - name: Initialize Capacitor Android (Sync only)
         run: |
           npx cap sync android
 
@@ -53,12 +59,16 @@ jobs:
         run: |
           npx capacitor-assets generate --android
           
-      - name: Patch Application ID (Test only)
+      - name: Patch Application ID & Name (Test only)
         if: matrix.environment == 'test'
         run: |
-          # Replace ID in build.gradle
-          sed -i 's/de.svbolzum.vereinsmanager/de.svbolzum.vereinsmanager.testing/g' android/app/build.gradle
-          # Replace ID in strings.xml (optional, but good for display)
+          # 1. Replace ONLY applicationId to avoid breaking namespace/Java package
+          sed -i 's/applicationId "de.svbolzum.vereinsmanager"/applicationId "de.svbolzum.vereinsmanager.testing"/g' android/app/build.gradle
+          
+          # 2. Update App Name in strings.xml
+          sed -i 's/>Vereinsmanager</>Vereinsm. (Test)</g' android/app/src/main/res/values/strings.xml
+          
+          # 3. Update package name in strings.xml (for other references)
           sed -i 's/de.svbolzum.vereinsmanager/de.svbolzum.vereinsmanager.testing/g' android/app/src/main/res/values/strings.xml
 
       - name: Build APK (${{ matrix.environment }})
