@@ -1,10 +1,10 @@
 apply plugin: 'com.android.application'
 
 android {
-    namespace "com.vereinsmanager.pro"
+    namespace "de.svbolzum.vereinsmanager"
     compileSdk rootProject.ext.compileSdkVersion
     defaultConfig {
-        applicationId "com.vereinsmanager.pro"
+        applicationId "de.svbolzum.vereinsmanager"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

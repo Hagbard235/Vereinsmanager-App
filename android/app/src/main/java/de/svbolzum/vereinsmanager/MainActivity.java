@@ -1,4 +1,4 @@
-package com.vereinsmanager.pro;
+package de.svbolzum.vereinsmanager;
 
 import com.getcapacitor.BridgeActivity;
 

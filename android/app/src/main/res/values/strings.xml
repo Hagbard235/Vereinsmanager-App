@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">Vereinsmanager</string>
     <string name="title_activity_main">Vereinsmanager</string>
-    <string name="package_name">com.vereinsmanager.pro</string>
-    <string name="custom_url_scheme">com.vereinsmanager.pro</string>
+    <string name="package_name">de.svbolzum.vereinsmanager</string>
+    <string name="custom_url_scheme">de.svbolzum.vereinsmanager</string>
     <string name="shortcut_test_label">Testumgebung</string>
     <string name="shortcut_test_long_label">Testumgebung starten</string>
 </resources>

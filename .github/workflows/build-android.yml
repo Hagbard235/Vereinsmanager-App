@@ -53,6 +53,14 @@ jobs:
         run: |
           npx capacitor-assets generate --android
           
+      - name: Patch Application ID (Test only)
+        if: matrix.environment == 'test'
+        run: |
+          # Replace ID in build.gradle
+          sed -i 's/de.svbolzum.vereinsmanager/de.svbolzum.vereinsmanager.testing/g' android/app/build.gradle
+          # Replace ID in strings.xml (optional, but good for display)
+          sed -i 's/de.svbolzum.vereinsmanager/de.svbolzum.vereinsmanager.testing/g' android/app/src/main/res/values/strings.xml
+
       - name: Build APK (${{ matrix.environment }})
         run: |
           cd android
