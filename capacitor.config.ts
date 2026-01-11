@@ -5,9 +5,12 @@ const config: CapacitorConfig = {
     appName: 'Vereinsmanager',
     webDir: 'www',
     server: {
-        url: 'https://vereinsmanager-pro---prod.web.app/',
+        // url: 'https://vereinsmanager-pro---prod.web.app/', // Wir starten lokal
         androidScheme: 'https',
-        cleartext: true
+        allowNavigation: [
+            '*.web.app',
+            'vereinsmanager-pro*.web.app'
+        ]
     }
 };
 
